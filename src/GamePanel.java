@@ -3,6 +3,7 @@ import Arrows.Direction;
 import Arrows.FilledArrow;
 import Songs.Album;
 import Songs.Song;
+import Menu.DanceMenu;
 
 import javax.sound.sampled.*;
 import javax.swing.*;
@@ -25,6 +26,7 @@ public class GamePanel extends JPanel implements ActionListener {
     int screenHeight = 600;
     Timer timer;
     int refreshRate = 20;
+    DanceMenu menu;
     Arrow upArrow;
     Arrow downArrow;
     Arrow leftArrow;
@@ -40,7 +42,7 @@ public class GamePanel extends JPanel implements ActionListener {
     );
     int arrowMoveTicks = 200;
     int arrowMoveSpeed;
-    int arrowSpeedRatio = 1;
+    double arrowSpeedRatio = 1;
     int movingArrowY = 0;
     Song song;
     boolean songPlaying;
@@ -73,6 +75,7 @@ public class GamePanel extends JPanel implements ActionListener {
     int showLeftTicks = 0;
     boolean showRight;
     int showRightTicks = 0;
+    boolean showMenu = true;
 
 
     GamePanel() {
@@ -87,21 +90,14 @@ public class GamePanel extends JPanel implements ActionListener {
         timer = new Timer(refreshRate, this);
         timer.start();
         Album.addSongs();
-        startGame();
-    }
+        menu = new DanceMenu();
 
-    private void startGame() {
-        startGame(new Random().nextInt(10000) % Album.songs.size());
-    }
-
-    private void startGame(int s) {
-        score = 0;
         setFixedArrows();
-        setSong(s);
-        playSong();
+
     }
 
     private void endGame() {
+        movingArrows.clear();
         ticks = 0;
         score = 0;
         missCount = 0;
@@ -109,6 +105,14 @@ public class GamePanel extends JPanel implements ActionListener {
         greatCount = 0;
         goodCount = 0;
         stopSong();
+    }
+
+    private void menuSelected() {
+        menu.finishSettings();
+        score = 0;
+        showMenu = false;
+        setSong();
+        playSong();
     }
 
     private void setFixedArrows() {
@@ -160,13 +164,14 @@ public class GamePanel extends JPanel implements ActionListener {
                 new Point(directionX.get(direction), movingArrowY), arrowTick));
     }
 
-    private void setSong(int s) {
-        song = Album.songs.get(s);
-        arrowMoveSpeed = (int)song.getTempo() / 24 * arrowSpeedRatio;
-        movingArrowY = fixedArrowY+ arrowMoveTicks * arrowMoveSpeed;
-        perfectMargin = 3 * arrowMoveSpeed;
-        greatMargin = 6 * arrowMoveSpeed;
-        goodMargin = 10 * arrowMoveSpeed;
+    private void setSong() {
+        song = menu.getSong();
+        arrowSpeedRatio = menu.getSpeed();
+        arrowMoveSpeed = (int) (song.getTempo() / 24 * arrowSpeedRatio);
+        movingArrowY = fixedArrowY + arrowMoveTicks * arrowMoveSpeed;
+        perfectMargin = (int)(3 *Math.pow( arrowMoveSpeed,0.75));
+        greatMargin = (int)(6 *Math.pow( arrowMoveSpeed,0.75));
+        goodMargin = (int)(10 *Math.pow( arrowMoveSpeed,0.75));
     }
 
     private void playSong() {
@@ -180,8 +185,8 @@ public class GamePanel extends JPanel implements ActionListener {
     }
 
     private void checkArrows(Direction direction) {
-        var checkArrows = movingArrows.stream().takeWhile(arrow -> arrow.direction == direction);
-        var fitArrow = checkArrows.takeWhile(arrow -> arrow.getPosition().y < fixedArrowY + goodMargin).findFirst();
+        var checkArrows = movingArrows.stream().filter(arrow -> arrow.direction == direction);
+        var fitArrow = checkArrows.filter(arrow -> arrow.getPosition().y < fixedArrowY + goodMargin).findFirst();
         if (fitArrow.isEmpty()) {
             miss();
             return;
@@ -250,6 +255,9 @@ public class GamePanel extends JPanel implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
+        if (showMenu) {
+            repaint();
+        }
         if (songPlaying) {
             tick();
             generateMovingArrows();
@@ -279,19 +287,29 @@ public class GamePanel extends JPanel implements ActionListener {
     @Override
     protected void paintComponent(Graphics graphics) {
         super.paintComponent(graphics);
-        if (songPlaying) {
+        if (showMenu) {
+            showMenu(graphics);
+        } else if (songPlaying) {
             paintFixedArrows(graphics);
             paintMovingArrows(graphics);
             showGameInfo(graphics);
         }
     }
 
+    private void showMenu(Graphics graphics) {
+        menu.paint(graphics);
+    }
+
     private void paintFixedArrows(Graphics graphics) {
-        fixedArrows.forEach(arrow -> arrow.drawArrow(graphics, 4));
+        fixedArrows.forEach(arrow -> arrow.drawArrow(graphics, 4, null));
     }
 
     private void paintMovingArrows(Graphics graphics) {
-        movingArrows.forEach(arrow -> arrow.fillArrow(graphics));
+        for (int i = movingArrows.size() - 1; i >= 0; i--) {
+            var arrow = movingArrows.get(i);
+            arrow.fillArrow(graphics);
+            arrow.drawArrowOffset(graphics, 2, 1, new Color(0, 0, 0));
+        }
     }
 
     private void showGameInfo(Graphics graphics) {
@@ -455,44 +473,53 @@ public class GamePanel extends JPanel implements ActionListener {
         @Override
         public void keyPressed(KeyEvent e) {
             var key = e.getKeyCode();
+            if (showMenu) {
+                switch (key) {
+                    case KeyEvent.VK_UP, KeyEvent.VK_W -> {
+                        menu.getCurrentMenu().next();
+                    }
+                    case KeyEvent.VK_DOWN, KeyEvent.VK_S -> {
+                        menu.getCurrentMenu().last();
+                    }
+                    case KeyEvent.VK_LEFT, KeyEvent.VK_A -> {
+                        menu.last();
+                    }
+                    case KeyEvent.VK_RIGHT, KeyEvent.VK_D -> {
+                        menu.next();
+                    }
+                    case KeyEvent.VK_ENTER -> {
+                        menuSelected();
+                    }
+                }
+                return;
+            }
             switch (key) {
                 case KeyEvent.VK_UP, KeyEvent.VK_W -> {
                     checkArrows(Direction.Up);
                     showUp = true;
                     showUpTicks = 0;
-                    break;
                 }
                 case KeyEvent.VK_DOWN, KeyEvent.VK_S -> {
                     checkArrows(Direction.Down);
                     showDown = true;
                     showDownTicks = 0;
-                    break;
                 }
                 case KeyEvent.VK_LEFT, KeyEvent.VK_A -> {
                     checkArrows(Direction.Left);
                     showLeft = true;
                     showLeftTicks = 0;
-                    break;
                 }
                 case KeyEvent.VK_RIGHT, KeyEvent.VK_D -> {
                     checkArrows(Direction.Right);
                     showRight = true;
                     showRightTicks = 0;
-                    break;
                 }
                 case KeyEvent.VK_ESCAPE -> {
                     endGame();
-                    startGame();
-                }
-                case KeyEvent.VK_1 -> {
-                    endGame();
-                    startGame(0);
-                }
-                case KeyEvent.VK_2 -> {
-                    endGame();
-                    startGame(1);
+                    showMenu = true;
                 }
             }
         }
     }
+
 }

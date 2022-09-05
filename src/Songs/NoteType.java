@@ -20,6 +20,21 @@ public enum NoteType {
     final int probrobilityMedium;
     final int probrobilityHard;
 
+    public int getProbrobility(SongDifficulty difficulty) {
+        switch (difficulty) {
+            case Easy -> {
+                return probrobilityEasy;
+            }
+            case Medium -> {
+                return probrobilityMedium;
+            }
+            case Hard -> {
+                return probrobilityHard;
+            }
+        }
+        return probrobilityEasy;
+    }
+
     NoteType(boolean up, boolean down, boolean left, boolean right, int pEasy, int pMid, int pHard) {
         this.up = up;
         this.down = down;

@@ -12,6 +12,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Song {
+    String id;
+    String name;
+    String script;
+    String customScript;
     ArrayList<Note> notes = new ArrayList<>();
     int delay = 0;
     int skip = 0;
@@ -19,11 +23,13 @@ public class Song {
     int length;
     public Clip clip;
 
-    Song(int l, double t, int d, int s, String musicPath) {
+    Song(int l, double t, int d, int s, String musicPath, String n, String i) {
         length = l;
         tempo = t;
         delay = d;
         skip = s;
+        name = n;
+        id = i;
         if (musicPath == null)
             return;
         var music = new File(musicPath);
@@ -42,17 +48,27 @@ public class Song {
     }
 
     public Note getOnBeatNote(int ticks) {
-        var onBeatNote = notes.stream().filter(note -> ((int)((note.beat) * 500 / tempo)) == ticks-delay).findFirst();
+        var onBeatNote = notes.stream().filter(note -> ((int) ((note.beat) * 500 / tempo)) == ticks - delay).findFirst();
         if (onBeatNote.isEmpty())
             return null;
         return onBeatNote.get();
     }
 
-    public ArrayList<Note> createNotes(String s) {
+    public void setScript(String s) {
+        script = s;
+    }public void setCustomScript(String s) {
+        script = s;
+    }
+
+
+
+    public ArrayList<Note> createNotes(SongDifficulty difficulty) {
+
         int t = 0;
         char tempC;
-        for (int i = 0; i < s.length(); i++) {
-            var c = s.charAt(i);
+        var createNotes = new ArrayList<Note>();
+        for (int i = 0; i < script.length(); i++) {
+            var c = script.charAt(i);
             if (c == '0')
                 t += 4;
             if (c == '.')
@@ -60,19 +76,32 @@ public class Song {
             if (c == '/')
                 t -= 3;
             if (noteTypeMap.containsKey(c)) {
-                notes.add(new Note(t, noteTypeMap.get(c)));
+                if (difficulty == SongDifficulty.Custom)
+                    createNotes.add(new Note(t, noteTypeMap.get(c)));
+                else
+                    createNotes.add(new Note(t, difficulty));
                 t += 4;
             }
             if (c == 'r') {
-                notes.add(new Note(t));
+                createNotes.add(new Note(t, difficulty));
                 t += 4;
             }
         }
+        notes = createNotes;
         return notes;
     }
 
     Map<Character, NoteType> noteTypeMap = Map.ofEntries(
-            Map.entry('a', NoteType.Up)
+            Map.entry('w', NoteType.Up),
+            Map.entry('x', NoteType.Down),
+            Map.entry('a', NoteType.Left),
+            Map.entry('d', NoteType.Right),
+            Map.entry('q', NoteType.UpLeft),
+            Map.entry('e', NoteType.UpRight),
+            Map.entry('z', NoteType.DownLeft),
+            Map.entry('c', NoteType.DownRight),
+            Map.entry('v', NoteType.UpDown),
+            Map.entry('b', NoteType.LeftRight)
 
     );
 
@@ -82,6 +111,10 @@ public class Song {
 
     public int getLength() {
         return length;
+    }
+
+    public String getName() {
+        return name;
     }
 
     public void playMusic() {
@@ -96,5 +129,9 @@ public class Song {
         var frameLength = clip.getFrameLength() / length;
         clip.setFramePosition(skip * frameLength);
         clip.stop();
+    }
+
+    public boolean hasCustom() {
+        return customScript!=null;
     }
 }

@@ -9,17 +9,18 @@ public class Note {
     public boolean left;
     public boolean right;
 
-    Note(int t) {
+    Note(int t, SongDifficulty difficulty) {
         beat = t;
-        var n = new Random().nextInt(10);
+        var n = new Random().nextInt(100);
         var types = NoteType.values();
         NoteType type = NoteType.Up;
         for (int i = 0; i < types.length; i++) {
-            if (n < types[i].probrobilityMedium) {
+
+            if (n < types[i].getProbrobility(difficulty)) {
                 type = types[i];
                 break;
             }
-            n-=types[i].probrobilityMedium;
+            n -= types[i].getProbrobility(difficulty);
         }
         this.up = type.up;
         this.down = type.down;

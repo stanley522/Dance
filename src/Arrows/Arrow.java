@@ -81,10 +81,12 @@ public class Arrow {
         this.directedPoints = directedPoints;
     }
 
-    public void drawArrow(Graphics graphics, int stroke) {
+    public void drawArrow(Graphics graphics, int stroke, Color setColor) {
         if (originPoints == null)
             return;
         graphics.setColor(color);
+        if (setColor != null)
+            graphics.setColor(setColor);
         var graphics2D = (Graphics2D) graphics;
         graphics2D.setStroke(new BasicStroke(stroke));
         var p = new Polygon();
@@ -97,7 +99,7 @@ public class Arrow {
     }
 
     public void drawArrow(Graphics graphics) {
-        drawArrow(graphics, 10);
+        drawArrow(graphics, 10,null);
     }
 
     public void fillArrow(Graphics graphics) {
