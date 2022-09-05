@@ -5,8 +5,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class FilledArrow extends Arrow {
-    public FilledArrow(Direction d, Color c, Point p) {
-        super(d, c, p);
+    public FilledArrow(Direction d, Color c, Point p, int tick) {
+        super(d, c, p,tick);
     }
 
     @Override

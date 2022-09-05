@@ -17,6 +17,8 @@ public enum NoteType {
     final boolean left;
     final boolean right;
     final int probrobilityEasy;
+    final int probrobilityMedium;
+    final int probrobilityHard;
 
     NoteType(boolean up, boolean down, boolean left, boolean right, int pEasy, int pMid, int pHard) {
         this.up = up;
@@ -24,5 +26,7 @@ public enum NoteType {
         this.left = left;
         this.right = right;
         probrobilityEasy = pEasy;
+        probrobilityMedium = pMid;
+        probrobilityHard = pHard;
     }
 }

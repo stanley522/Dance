@@ -24,7 +24,7 @@ public class GamePanel extends JPanel implements ActionListener {
     int screenWidth = 600;
     int screenHeight = 600;
     Timer timer;
-    int refreshRate = 10;
+    int refreshRate = 20;
     Arrow upArrow;
     Arrow downArrow;
     Arrow leftArrow;
@@ -33,12 +33,15 @@ public class GamePanel extends JPanel implements ActionListener {
     ArrayList<Arrow> movingArrows = new ArrayList<>();
     int fixedArrowY = 100;
     Map<Direction, Integer> directionX = Map.ofEntries(
-            Map.entry(Direction.Up, 200),
-            Map.entry(Direction.Down, 300),
+            Map.entry(Direction.Up, 300),
+            Map.entry(Direction.Down, 200),
             Map.entry(Direction.Left, 100),
             Map.entry(Direction.Right, 400)
     );
-    int movingArrowY = 800;
+    int arrowMoveTicks = 200;
+    int arrowMoveSpeed;
+    int arrowSpeedRatio = 1;
+    int movingArrowY = 0;
     Song song;
     boolean songPlaying;
     int ticks = 0;
@@ -58,9 +61,9 @@ public class GamePanel extends JPanel implements ActionListener {
     int perfectCount = 0;
     int greatCount = 0;
     int goodCount = 0;
-    int perfectMargin = 15;
-    int greatMargin = 30;
-    int goodMargin = 50;
+    int perfectMargin = 20;
+    int greatMargin = 35;
+    int goodMargin = 60;
     int showDirectionLinger = 4;
     boolean showUp;
     int showUpTicks = 0;
@@ -83,14 +86,18 @@ public class GamePanel extends JPanel implements ActionListener {
 
         timer = new Timer(refreshRate, this);
         timer.start();
-
+        Album.addSongs();
         startGame();
     }
 
     private void startGame() {
+        startGame(new Random().nextInt(10000) % Album.songs.size());
+    }
+
+    private void startGame(int s) {
         score = 0;
         setFixedArrows();
-        setSong();
+        setSong(s);
         playSong();
     }
 
@@ -106,13 +113,13 @@ public class GamePanel extends JPanel implements ActionListener {
 
     private void setFixedArrows() {
         var upColor = new Color(100, 100, 220);
-        upArrow = new FilledArrow(Direction.Up, upColor, new Point(directionX.get(Direction.Up), fixedArrowY));
+        upArrow = new FilledArrow(Direction.Up, upColor, new Point(directionX.get(Direction.Up), fixedArrowY), 0);
         var downColor = new Color(220, 220, 100);
-        downArrow = new FilledArrow(Direction.Down, downColor, new Point(directionX.get(Direction.Down), fixedArrowY));
+        downArrow = new FilledArrow(Direction.Down, downColor, new Point(directionX.get(Direction.Down), fixedArrowY), 0);
         var leftColor = new Color(100, 220, 100);
-        leftArrow = new FilledArrow(Direction.Left, leftColor, new Point(directionX.get(Direction.Left), fixedArrowY));
+        leftArrow = new FilledArrow(Direction.Left, leftColor, new Point(directionX.get(Direction.Left), fixedArrowY), 0);
         var rightColor = new Color(220, 60, 100);
-        rightArrow = new FilledArrow(Direction.Right, rightColor, new Point(directionX.get(Direction.Right), fixedArrowY));
+        rightArrow = new FilledArrow(Direction.Right, rightColor, new Point(directionX.get(Direction.Right), fixedArrowY), 0);
         fixedArrows = new ArrayList<Arrow>(List.of(
                 upArrow, downArrow, leftArrow, rightArrow
         ));
@@ -121,10 +128,10 @@ public class GamePanel extends JPanel implements ActionListener {
     private void moveArrows() {
         if (movingArrows.size() == 0)
             return;
-        movingArrows.forEach(arrow -> arrow.moveArrow(0, (int)-song.getTempo()/15));
+        movingArrows.forEach(arrow -> arrow.moveArrow(0, (int) -arrowMoveSpeed));
         var removeArrows = new ArrayList<Arrow>();
         for (var arrow : movingArrows) {
-            if (arrow.getPosition().y < fixedArrowY - 60) {
+            if (arrow.getPosition().y < fixedArrowY - goodMargin) {
                 miss();
                 removeArrows.add(arrow);
             }
@@ -134,28 +141,32 @@ public class GamePanel extends JPanel implements ActionListener {
 
     private void generateMovingArrows() {
         var onBeatNote = song.getOnBeatNote(ticks);
+        int hitTick = ticks + arrowMoveTicks;
         if (onBeatNote == null)
             return;
         if (onBeatNote.up)
-            generateMovingArrow(Direction.Up);
+            generateMovingArrow(Direction.Up, hitTick);
         if (onBeatNote.down)
-            generateMovingArrow(Direction.Down);
+            generateMovingArrow(Direction.Down, hitTick);
         if (onBeatNote.left)
-            generateMovingArrow(Direction.Left);
+            generateMovingArrow(Direction.Left, hitTick);
         if (onBeatNote.right)
-            generateMovingArrow(Direction.Right);
+            generateMovingArrow(Direction.Right, hitTick);
 
     }
 
-    private void generateMovingArrow(Direction direction) {
+    private void generateMovingArrow(Direction direction, int arrowTick) {
         movingArrows.add(new FilledArrow(direction, new Color(250, 250, 250),
-                new Point(directionX.get(direction), movingArrowY)));
+                new Point(directionX.get(direction), movingArrowY), arrowTick));
     }
 
-    private void setSong() {
-        Album.addSongs();
-        song = Album.songs.get(new Random().nextInt(10000) % Album.songs.size());
-        timer.setDelay(10);
+    private void setSong(int s) {
+        song = Album.songs.get(s);
+        arrowMoveSpeed = (int)song.getTempo() / 24 * arrowSpeedRatio;
+        movingArrowY = fixedArrowY+ arrowMoveTicks * arrowMoveSpeed;
+        perfectMargin = 3 * arrowMoveSpeed;
+        greatMargin = 6 * arrowMoveSpeed;
+        goodMargin = 10 * arrowMoveSpeed;
     }
 
     private void playSong() {
@@ -173,7 +184,6 @@ public class GamePanel extends JPanel implements ActionListener {
         var fitArrow = checkArrows.takeWhile(arrow -> arrow.getPosition().y < fixedArrowY + goodMargin).findFirst();
         if (fitArrow.isEmpty()) {
             miss();
-            missCount++;
             return;
         }
         var arrow = fitArrow.get();
@@ -189,6 +199,7 @@ public class GamePanel extends JPanel implements ActionListener {
 
     private void miss() {
         combo = 0;
+        missCount++;
         showActionClear();
         showMiss = true;
     }
@@ -445,25 +456,25 @@ public class GamePanel extends JPanel implements ActionListener {
         public void keyPressed(KeyEvent e) {
             var key = e.getKeyCode();
             switch (key) {
-                case KeyEvent.VK_UP ,KeyEvent.VK_W-> {
+                case KeyEvent.VK_UP, KeyEvent.VK_W -> {
                     checkArrows(Direction.Up);
                     showUp = true;
                     showUpTicks = 0;
                     break;
                 }
-                case KeyEvent.VK_DOWN , KeyEvent.VK_S -> {
+                case KeyEvent.VK_DOWN, KeyEvent.VK_S -> {
                     checkArrows(Direction.Down);
                     showDown = true;
                     showDownTicks = 0;
                     break;
                 }
-                case KeyEvent.VK_LEFT , KeyEvent.VK_A -> {
+                case KeyEvent.VK_LEFT, KeyEvent.VK_A -> {
                     checkArrows(Direction.Left);
                     showLeft = true;
                     showLeftTicks = 0;
                     break;
                 }
-                case KeyEvent.VK_RIGHT , KeyEvent.VK_D -> {
+                case KeyEvent.VK_RIGHT, KeyEvent.VK_D -> {
                     checkArrows(Direction.Right);
                     showRight = true;
                     showRightTicks = 0;
@@ -472,6 +483,14 @@ public class GamePanel extends JPanel implements ActionListener {
                 case KeyEvent.VK_ESCAPE -> {
                     endGame();
                     startGame();
+                }
+                case KeyEvent.VK_1 -> {
+                    endGame();
+                    startGame(0);
+                }
+                case KeyEvent.VK_2 -> {
+                    endGame();
+                    startGame(1);
                 }
             }
         }

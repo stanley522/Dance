@@ -1,28 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="fe106b51-e3f8-44fa-8463-f86b9c65bce6" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/artifacts/Dance_jar.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/uiDesigner.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Dance.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/ArrowPrecision.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Arrows/Arrow.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Arrows/Direction.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Arrows/FilledArrow.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/GameFrame.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/GamePanel.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/META-INF/MANIFEST.MF" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Main.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Songs/Album.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Songs/BeatType.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Songs/Note.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Songs/NoteType.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Songs/Song.java" afterDir="false" />
+    <list default="true" id="fe106b51-e3f8-44fa-8463-f86b9c65bce6" name="Changes" comment="Version 1.0 MaydayEmbrace">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Arrows/Arrow.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Arrows/Arrow.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Arrows/FilledArrow.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Arrows/FilledArrow.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/GamePanel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/GamePanel.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Songs/Album.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Songs/Album.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Songs/Note.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Songs/Note.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Songs/NoteType.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Songs/NoteType.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Songs/Song.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Songs/Song.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -63,6 +50,7 @@
 }]]></component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Stanley\Coding\Java\Dance" />
       <recent name="C:\Stanley\Coding\Java\Dance\src" />
     </key>
   </component>
@@ -89,6 +77,14 @@
       <option name="presentableId" value="Default" />
       <updated>1662227599152</updated>
     </task>
+    <task id="LOCAL-00001" summary="Version 1.0 MaydayEmbrace">
+      <created>1662313271909</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1662313271909</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -102,22 +98,26 @@
       </map>
     </option>
   </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Version 1.0 MaydayEmbrace" />
+    <option name="LAST_COMMIT_MESSAGE" value="Version 1.0 MaydayEmbrace" />
+  </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/Songs/Album.java</url>
-          <line>53</line>
+          <line>55</line>
           <option name="timeStamp" value="27" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/Songs/Song.java</url>
-          <line>49</line>
+          <line>47</line>
           <option name="timeStamp" value="33" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/Songs/Song.java</url>
-          <line>46</line>
+          <line>44</line>
           <properties>
             <option name="lambda-ordinal" value="-1" />
           </properties>

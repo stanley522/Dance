@@ -11,15 +11,15 @@ public class Note {
 
     Note(int t) {
         beat = t;
-        var n = new Random().nextInt(100);
+        var n = new Random().nextInt(10);
         var types = NoteType.values();
         NoteType type = NoteType.Up;
         for (int i = 0; i < types.length; i++) {
-            if (n < types[i].probrobilityEasy) {
+            if (n < types[i].probrobilityMedium) {
                 type = types[i];
                 break;
             }
-            n-=types[i].probrobilityEasy;
+            n-=types[i].probrobilityMedium;
         }
         this.up = type.up;
         this.down = type.down;

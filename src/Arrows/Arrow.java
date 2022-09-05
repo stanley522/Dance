@@ -12,20 +12,22 @@ public class Arrow {
     protected Point position;
     private int sizeRatio = 2;
     int offset = 0;
+    int tick;
 
-
-    public Arrow(Direction d, Color c, Point p) {
+    public Arrow(Direction d, Color c, Point p, int t) {
         direction = d;
         color = c;
         position = p;
+        tick = t;
         setOriginPoints();
         setDirectedPoints();
     }
 
-    public Arrow(Direction d, Color c, Point p, int o) {
+    public Arrow(Direction d, Color c, Point p, int t, int o) {
         direction = d;
         color = c;
         position = p;
+        tick = t;
         offset = o;
         setOriginPoints();
         setDirectedPoints();
@@ -73,8 +75,8 @@ public class Arrow {
                     + rotationPoint.y) * sizeRatio;
             directedPoints.add(p);
         }
-        rotationPoint.x *=sizeRatio;
-        rotationPoint.y *=sizeRatio;
+        rotationPoint.x *= sizeRatio;
+        rotationPoint.y *= sizeRatio;
 
         this.directedPoints = directedPoints;
     }
@@ -128,7 +130,7 @@ public class Arrow {
 
     public void drawArrowOffset(Graphics graphics, int stroke, int offset) {
         drawArrowOffset(graphics, stroke, offset,
-                new Color(color.getRed()+20,color.getGreen()+20,color.getBlue()+20,200));
+                new Color(color.getRed() + 20, color.getGreen() + 20, color.getBlue() + 20, 200));
     }
 
 

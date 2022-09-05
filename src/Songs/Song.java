@@ -19,7 +19,7 @@ public class Song {
     int length;
     public Clip clip;
 
-    Song(int l, int t, int d, int s, String musicPath) {
+    Song(int l, double t, int d, int s, String musicPath) {
         length = l;
         tempo = t;
         delay = d;
@@ -42,9 +42,7 @@ public class Song {
     }
 
     public Note getOnBeatNote(int ticks) {
-        var check = new ArrayList<Integer>();
-                notes.stream().forEach(note -> check.add((int)((note.beat + delay) * 1500 / tempo)));
-        var onBeatNote = notes.stream().filter(note -> ((int)((note.beat + delay) * 1500 / tempo)) == ticks).findFirst();
+        var onBeatNote = notes.stream().filter(note -> ((int)((note.beat) * 500 / tempo)) == ticks-delay).findFirst();
         if (onBeatNote.isEmpty())
             return null;
         return onBeatNote.get();
@@ -95,6 +93,8 @@ public class Song {
     public void stopMusic() {
         if (clip == null)
             return;
+        var frameLength = clip.getFrameLength() / length;
+        clip.setFramePosition(skip * frameLength);
         clip.stop();
     }
 }
