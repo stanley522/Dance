@@ -15,6 +15,7 @@ public class DanceMenu {
     SongMenu songs;
     DifficultyMenu difficulty;
     ArrowSpeedMenu speeds;
+    VolumeMenu volumes;
     Point position = new Point(300, 250);
     Song selectedSong;
 
@@ -22,8 +23,9 @@ public class DanceMenu {
         songs = new SongMenu();
         difficulty = new DifficultyMenu();
         speeds = new ArrowSpeedMenu();
+        volumes = new VolumeMenu();
         menuList = new ArrayList<DanceMenuItem>(List.of(
-                songs, difficulty, speeds
+                songs, difficulty, speeds,volumes
         ));
         currentMenu = menuList.get(index);
     }
@@ -36,9 +38,15 @@ public class DanceMenu {
     public Song getSong() {
         return songs.getSong();
     }
+    public SongDifficulty getDifficulty() {
+        return difficulty.getDifficulty();
+    }
 
     public double getSpeed() {
         return speeds.getSpeed();
+    }
+    public int getVolume() {
+        return volumes.getVolume();
     }
 
     public void next() {
@@ -137,6 +145,7 @@ public class DanceMenu {
         }
     }
 
+
     public static class DanceMenuItem {
         String infoString;
         String displayString;
@@ -208,7 +217,8 @@ public class DanceMenu {
                 Map.entry(1, SongDifficulty.Custom),
                 Map.entry(2, SongDifficulty.Easy),
                 Map.entry(3, SongDifficulty.Medium),
-                Map.entry(4, SongDifficulty.Hard)
+                Map.entry(4, SongDifficulty.Hard),
+                Map.entry(5, SongDifficulty.Crazy)
         );
 
         DifficultyMenu() {
@@ -219,7 +229,7 @@ public class DanceMenu {
 
         @Override
         public void next() {
-            if (index == 4)
+            if (index == difficultyMap.size())
                 return;
             index++;
             updateInfo();
@@ -235,7 +245,7 @@ public class DanceMenu {
 
         public void updateInfo() {
             displayString = difficultyMap.get(index).toString();
-            if (index == 4)
+            if (index == difficultyMap.size())
                 nextDisplayString = null;
             else
                 nextDisplayString = difficultyMap.get(index + 1).toString();
@@ -295,6 +305,51 @@ public class DanceMenu {
 
         public double getSpeed() {
             return speeds.get(index);
+        }
+    }
+    public static class VolumeMenu extends DanceMenuItem {
+        int index = 5;
+        ArrayList<Integer> volumes = new ArrayList<Integer>(List.of(
+                0,10,20,30,40,50,60,70,80,90,100
+        ));
+
+        VolumeMenu() {
+            infoString = "Volume";
+            width = 200;
+            updateInfo();
+        }
+
+        @Override
+        public void next() {
+            if (index == volumes.size() - 1)
+                return;
+            index++;
+            updateInfo();
+        }
+
+        @Override
+        public void last() {
+            if (index == 0)
+                return;
+            index--;
+            updateInfo();
+        }
+
+        public void updateInfo() {
+            displayString = volumes.get(index).toString();
+
+            if (index == volumes.size() - 1)
+                nextDisplayString = null;
+            else
+                nextDisplayString = volumes.get(index + 1).toString();
+            if (index == 0)
+                lastDisplayString = null;
+            else
+                lastDisplayString = volumes.get(index - 1).toString();
+        }
+
+        public int getVolume() {
+            return volumes.get(index);
         }
     }
 }

@@ -1,21 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="fe106b51-e3f8-44fa-8463-f86b9c65bce6" name="Changes" comment="Version 1.1 Baby">
-      <change afterPath="$PROJECT_DIR$/Scripts/Baby.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Scripts/BabyCustom.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Scripts/Mayday_Embrace.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Menu/DanceMenu.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Songs/SongDifficulty.java" afterDir="false" />
+    <list default="true" id="fe106b51-e3f8-44fa-8463-f86b9c65bce6" name="Changes" comment="Version 2.0 Menu">
+      <change afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/org_json_jar.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/music/Baby.wav" beforeDir="false" afterPath="$PROJECT_DIR$/Music/Baby.wav" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/music/Mayday_Embrace.wav" beforeDir="false" afterPath="$PROJECT_DIR$/Music/Mayday_Embrace.wav" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Arrows/Arrow.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Arrows/Arrow.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Dance.iml" beforeDir="false" afterPath="$PROJECT_DIR$/Dance.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Scripts/BabyCustom.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/GameFrame.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/GameFrame.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/GamePanel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/GamePanel.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Menu/DanceMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Menu/DanceMenu.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Songs/Album.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Songs/Album.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Songs/Note.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Songs/Note.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Songs/NoteType.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Songs/NoteType.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Songs/Song.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Songs/Song.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Songs/SongDifficulty.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Songs/SongDifficulty.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -25,8 +24,8 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="Class" />
         <option value="Enum" />
+        <option value="Class" />
       </list>
     </option>
   </component>
@@ -49,14 +48,20 @@
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "project.structure.last.edited": "Artifacts",
+    "jdk.selected.JAVA_MODULE": "openjdk-18",
+    "last_opened_file_path": "C:/Stanley/Coding/Java/jar/org.json.jar.zip",
+    "project.structure.last.edited": "Modules",
     "project.structure.proportion": "0.15",
-    "project.structure.side.proportion": "0.2"
+    "project.structure.side.proportion": "0.2",
+    "settings.editor.selected.configurable": "com.intellij.jarRepository.settings.RemoteRepositoriesConfigurable"
   }
 }]]></component>
   <component name="RecentsManager">
     <key name="CreateClassDialog.RecentsKey">
       <recent name="Menu" />
+    </key>
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Stanley\Coding\Java\Dance\src" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\Stanley\Coding\Java\Dance" />
@@ -100,7 +105,14 @@
       <option name="project" value="LOCAL" />
       <updated>1662353719594</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="Version 2.0 Menu">
+      <created>1662408551913</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1662408551913</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -117,47 +129,30 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Version 1.0 MaydayEmbrace" />
     <MESSAGE value="Version 1.1 Baby" />
-    <option name="LAST_COMMIT_MESSAGE" value="Version 1.1 Baby" />
+    <MESSAGE value="Version 2.0 Menu" />
+    <option name="LAST_COMMIT_MESSAGE" value="Version 2.0 Menu" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/GamePanel.java</url>
-          <line>490</line>
-          <option name="timeStamp" value="42" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/Menu/DanceMenu.java</url>
-          <line>139</line>
+          <line>148</line>
           <option name="timeStamp" value="43" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/Menu/DanceMenu.java</url>
-          <line>31</line>
-          <option name="timeStamp" value="44" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/Songs/Note.java</url>
-          <line>14</line>
-          <option name="timeStamp" value="45" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/Songs/Song.java</url>
-          <line>89</line>
-          <option name="timeStamp" value="46" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/Songs/Album.java</url>
-          <line>39</line>
-          <option name="timeStamp" value="48" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/Songs/Album.java</url>
-          <line>34</line>
-          <option name="timeStamp" value="49" />
+          <url>file://$PROJECT_DIR$/src/GameFrame.java</url>
+          <line>15</line>
+          <option name="timeStamp" value="67" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
+    <watches-manager>
+      <configuration name="Application">
+        <watch expression="(int) (((note.beat) * 500 / tempo)) == ticks - delay" language="JAVA" />
+        <watch expression="(int) (((note.beat) * 500 / tempo))" language="JAVA" />
+        <watch expression="ticks - delay" language="JAVA" />
+      </configuration>
+    </watches-manager>
   </component>
 </project>

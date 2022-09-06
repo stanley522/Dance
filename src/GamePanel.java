@@ -5,7 +5,6 @@ import Songs.Album;
 import Songs.Song;
 import Menu.DanceMenu;
 
-import javax.sound.sampled.*;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -13,12 +12,14 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.io.File;
-import java.io.IOException;
-import java.net.URL;
+import java.io.FileWriter;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
+
+import org.json.*;
 
 public class GamePanel extends JPanel implements ActionListener {
 
@@ -27,6 +28,10 @@ public class GamePanel extends JPanel implements ActionListener {
     Timer timer;
     int refreshRate = 20;
     DanceMenu menu;
+
+    String highScorePath = "Files/HighScores.txt";
+    boolean saveHighScore;
+    int highScore;
     Arrow upArrow;
     Arrow downArrow;
     Arrow leftArrow;
@@ -94,9 +99,55 @@ public class GamePanel extends JPanel implements ActionListener {
 
         setFixedArrows();
 
+        try {
+            var highScoreFile = new File(highScorePath);
+            highScoreFile.createNewFile();
+            saveHighScore = true;
+        } catch (Exception e) {
+            System.out.println("An error occurred.");
+            e.printStackTrace();
+            saveHighScore = false;
+        }
+    }
+
+    private void menuSelected() {
+        menu.finishSettings();
+        score = 0;
+        showMenu = false;
+        setSong();
+        playSong();
+        setHighScoreObject();
+    }
+
+    private void setHighScoreObject() {
+        try {
+            var highScoreJson = String.join(" ", Files.readAllLines(Paths.get(highScorePath)));
+            JSONObject highScores;
+            if (highScoreJson.isEmpty())
+                highScores = new JSONObject();
+            else
+                highScores = new JSONObject(highScoreJson);
+
+
+            if (!highScores.has(song.getId()))
+                highScores.put(song.getId(), new JSONObject());
+            var songScores = highScores.getJSONObject(song.getId());
+            if (!songScores.has(menu.getDifficulty().toString()))
+                songScores.put(menu.getDifficulty().toString(), 0);
+
+            highScore = highScores.getJSONObject(song.getId()).getInt(menu.getDifficulty().toString());
+
+            FileWriter myWriter = new FileWriter(highScorePath);
+            myWriter.write(highScores.toString());
+            myWriter.close();
+        } catch (Exception e) {
+            System.out.println("An error occurred.");
+            e.printStackTrace();
+        }
     }
 
     private void endGame() {
+        updateHighScore();
         movingArrows.clear();
         ticks = 0;
         score = 0;
@@ -107,12 +158,27 @@ public class GamePanel extends JPanel implements ActionListener {
         stopSong();
     }
 
-    private void menuSelected() {
-        menu.finishSettings();
-        score = 0;
-        showMenu = false;
-        setSong();
-        playSong();
+    public void updateHighScore() {
+        if (!saveHighScore)
+            return;
+        try {
+            var highScoreJson = String.join(" ", Files.readAllLines(Paths.get(highScorePath)));
+
+            JSONObject highScores = new JSONObject(highScoreJson);
+            var songScores = highScores.getJSONObject(song.getId());
+            var songDifficultyScore = songScores.getInt(menu.getDifficulty().toString());
+
+            if (score > songDifficultyScore) {
+                songScores.put(menu.getDifficulty().toString(), score);
+            }
+
+            FileWriter myWriter = new FileWriter(highScorePath);
+            myWriter.write(highScores.toString());
+            myWriter.close();
+        } catch (Exception e) {
+            System.out.println("An error occurred.");
+            e.printStackTrace();
+        }
     }
 
     private void setFixedArrows() {
@@ -144,19 +210,21 @@ public class GamePanel extends JPanel implements ActionListener {
     }
 
     private void generateMovingArrows() {
-        var onBeatNote = song.getOnBeatNote(ticks);
+        var onBeatNotes = song.getOnBeatNote(ticks);
         int hitTick = ticks + arrowMoveTicks;
-        if (onBeatNote == null)
-            return;
-        if (onBeatNote.up)
-            generateMovingArrow(Direction.Up, hitTick);
-        if (onBeatNote.down)
-            generateMovingArrow(Direction.Down, hitTick);
-        if (onBeatNote.left)
-            generateMovingArrow(Direction.Left, hitTick);
-        if (onBeatNote.right)
-            generateMovingArrow(Direction.Right, hitTick);
-
+        for (var onBeatNote : onBeatNotes
+        ) {
+            if (onBeatNote == null)
+                return;
+            if (onBeatNote.up)
+                generateMovingArrow(Direction.Up, hitTick);
+            if (onBeatNote.down)
+                generateMovingArrow(Direction.Down, hitTick);
+            if (onBeatNote.left)
+                generateMovingArrow(Direction.Left, hitTick);
+            if (onBeatNote.right)
+                generateMovingArrow(Direction.Right, hitTick);
+        }
     }
 
     private void generateMovingArrow(Direction direction, int arrowTick) {
@@ -167,16 +235,16 @@ public class GamePanel extends JPanel implements ActionListener {
     private void setSong() {
         song = menu.getSong();
         arrowSpeedRatio = menu.getSpeed();
-        arrowMoveSpeed = (int) (song.getTempo() / 24 * arrowSpeedRatio);
+        arrowMoveSpeed = (int) (song.getTempo() / 16 * arrowSpeedRatio);
         movingArrowY = fixedArrowY + arrowMoveTicks * arrowMoveSpeed;
-        perfectMargin = (int)(3 *Math.pow( arrowMoveSpeed,0.75));
-        greatMargin = (int)(6 *Math.pow( arrowMoveSpeed,0.75));
-        goodMargin = (int)(10 *Math.pow( arrowMoveSpeed,0.75));
+        perfectMargin = (int) (3 * Math.pow(arrowMoveSpeed, 0.75));
+        greatMargin = (int) (6 * Math.pow(arrowMoveSpeed, 0.75));
+        goodMargin = (int) (10 * Math.pow(arrowMoveSpeed, 0.75));
     }
 
     private void playSong() {
         songPlaying = true;
-        song.playMusic();
+        song.playMusic(menu.getVolume());
     }
 
     private void stopSong() {
@@ -205,14 +273,14 @@ public class GamePanel extends JPanel implements ActionListener {
     private void miss() {
         combo = 0;
         missCount++;
-        showActionClear();
+        clearShowAction();
         showMiss = true;
     }
 
     private void perfect() {
         combo++;
         perfectCount++;
-        showActionClear();
+        clearShowAction();
         showPerfect = true;
         addScore(ArrowPrecision.Perfect);
     }
@@ -220,7 +288,7 @@ public class GamePanel extends JPanel implements ActionListener {
     private void great() {
         combo++;
         greatCount++;
-        showActionClear();
+        clearShowAction();
         showGreat = true;
         addScore(ArrowPrecision.Great);
     }
@@ -228,12 +296,12 @@ public class GamePanel extends JPanel implements ActionListener {
     private void good() {
         combo++;
         goodCount++;
-        showActionClear();
+        clearShowAction();
         showGood = true;
         addScore(ArrowPrecision.Good);
     }
 
-    private void showActionClear() {
+    private void clearShowAction() {
         showActionTicks = 0;
         showMiss = false;
         showPerfect = false;
@@ -341,37 +409,57 @@ public class GamePanel extends JPanel implements ActionListener {
     private void showGameState(Graphics graphics) {
         showArrowCount(graphics);
         showScore(graphics);
+        showHighScore(graphics);
     }
 
     private void showArrowCount(Graphics graphics) {
-        var x = 500;
+        var x = 440;
         var y = 20;
 
-        graphics.setColor(new Color(200, 200, 60));
         graphics.setFont(new Font("TimesNewRoman", Font.PLAIN, 20));
+        graphics.setColor(new Color(200, 200, 60));
         var metrics = graphics.getFontMetrics();
         var text = "Perfect: " + perfectCount;
         var xOffset = metrics.stringWidth(text) / 2;
+        x -= xOffset;
         var yOffset = graphics.getFont().getSize() / 2;
-        graphics.drawString(text, x - xOffset, y + yOffset);
+        y += yOffset;
+        graphics.drawString(text, x, y);
 
         y += 20;
         graphics.setColor(new Color(60, 200, 120));
-        graphics.setFont(new Font("TimesNewRoman", Font.PLAIN, 20));
         text = "Great: " + greatCount;
-        graphics.drawString(text, x - xOffset, y + yOffset);
+        graphics.drawString(text, x, y);
 
         y += 20;
-        graphics.setColor(new Color(120, 120, 120));
-        graphics.setFont(new Font("TimesNewRoman", Font.PLAIN, 20));
+        graphics.setColor(new Color(120, 120, 200));
         text = "Good: " + goodCount;
-        graphics.drawString(text, x - xOffset, y + yOffset);
+        graphics.drawString(text, x, y);
 
         y += 20;
         graphics.setColor(new Color(200, 60, 60));
-        graphics.setFont(new Font("TimesNewRoman", Font.PLAIN, 20));
         text = "Miss: " + missCount;
-        graphics.drawString(text, x - xOffset, y + yOffset);
+        graphics.drawString(text, x, y);
+
+        y -= 60;
+        x += 120;
+        double total = perfectCount+greatCount+goodCount+ missCount;
+
+        graphics.setColor(new Color(120, 120, 120));
+        text = String.format("%.1f",perfectCount*100/total)+"%";
+        graphics.drawString(text, x, y);
+        y += 20;
+        graphics.setColor(new Color(120, 120, 120));
+        text = String.format("%.1f",greatCount*100/total)+"%";
+        graphics.drawString(text, x, y);
+        y += 20;
+        graphics.setColor(new Color(120, 120, 120));
+        text = String.format("%.1f",goodCount*100/total)+"%";
+        graphics.drawString(text, x, y);
+        y += 20;
+        graphics.setColor(new Color(120, 120, 120));
+        text = String.format("%.1f",missCount*100/total)+"%";
+        graphics.drawString(text, x, y);
     }
 
     private void showScore(Graphics graphics) {
@@ -381,6 +469,18 @@ public class GamePanel extends JPanel implements ActionListener {
         graphics.setFont(new Font("TimesNewRoman", Font.PLAIN, 36));
         var metrics = graphics.getFontMetrics();
         var text = "Score: " + score;
+        var xOffset = 0;
+        var yOffset = graphics.getFont().getSize() / 2;
+        graphics.drawString(text, x - xOffset, y + yOffset);
+    }
+
+    private void showHighScore(Graphics graphics) {
+        var x = 20;
+        var y = 75;
+        graphics.setColor(new Color(20, 150, 60));
+        graphics.setFont(new Font("TimesNewRoman", Font.PLAIN, 20));
+        var metrics = graphics.getFontMetrics();
+        var text = "HighScore: " + highScore;
         var xOffset = 0;
         var yOffset = graphics.getFont().getSize() / 2;
         graphics.drawString(text, x - xOffset, y + yOffset);
@@ -426,7 +526,7 @@ public class GamePanel extends JPanel implements ActionListener {
             graphics.drawString(text, x - xOffset, y + yOffset);
         }
         if (showActionTicks > showActionLinger) {
-            showActionClear();
+            clearShowAction();
         }
     }
 

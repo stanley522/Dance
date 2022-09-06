@@ -44,34 +44,12 @@ public class Album {
             try{
                 var file = Files.readAllLines(Paths.get(customScriptPath));
                 var script =String.join(" ", file);
-                song.setScript(script);
+                song.setCustomScript(script);
             }
             catch (Exception e){
                 e.printStackTrace();
             }
         }
-/*
-        //"r0r0r0r0r0r0r0r0r0r0r0r0r0r0r0r0r0r0r0r0r0r0r0r0r0r0r0r0r0r0r0r0r0r0r0r0r0r0r0r0r0r0r0r0r0r0r0r0r0r0r0r0r0r0r0r0r0r0r0r0r0r0r0r0r0r0r0r0r0r0r0r0r0r0r0r0r0r0r0r0r0r0r0r0rrrrrrrrrrrrrrr"+
-        "rrrrr.rr.00 r.rrr0.r.rr.00 rrrrr.rr.00" +
-                "r.rrrr.r.rr.00 rrrrr.rr.00 r.rr0r.r.rr.00" +
-                "rrrrr.rr.00 r.rrrr.r.rr.00 0.rr.r.r.00.rr.r.r.0" +
-                "rrrrr.rr.00 0.rr.r.r.00.rr.r0" +
-                "rrrrr.rr.00 0.rr.r.r.r.r.r.rr.00" +
-                "r.0r.0rr.rr00. 0.r.r.r.r00000 00000.rr0" +
-                "0.r.r.r.r00000 00000.r0.r0 0.rr.r00.r.0r.0r." +
-                "r0000r.r.00 r0r0r000 r0r0r000" +
-                "r0r0r000 rrr.r.r" +
-                //mid
-                "r000r000r00r.r.r.r." +
-                //repeat
-                "rrrrr.rr.00 r.rrr0.r.rr.00 rrrrr.rr.00" +
-                "r.rrrr.r.rr.00 rrrrr.rr.00 r.rr0r.r.rr.00" +
-                "rrrrr.rr.00 r.rrrr.r.rr.00 0.rr.r.r.00.rr.r.r.0" +
-                "rrrrr.rr.00 0.rr.r.r.00.rr.r0" +
-                "rrrrr.rr.00 0.rr.r.r.r.r.r.rr.00" +
-                "r.0r.0rr.rr00. 0.r.r.r.r00000 00000.rr0" +
-                "0.r.r.r.r00000 00000.r0.r0 0.rr.r00.r.0r.0r." +
-                "r0000r.r.00 00000000 00000000"*/
         songs.add(song);
     }
 
@@ -81,31 +59,22 @@ public class Album {
         var scriptPath = "Scripts/Baby.txt";
         var customScriptPath = "Scripts/Baby_Custom.txt";
 
-        var song = new Song(150, 124.1, 143, 3, musicPath, "寶貝", "baby");
+        var song = new Song(150, 123.0, 144, 3, musicPath, "寶貝", "Baby");
 
         if (!scriptPath.isEmpty()) {
             try {
                 var file = Files.readAllLines(Paths.get(scriptPath));
                 var script =String.join(" ", file);
                 song.setScript(script);
-
-                /*//"r0r0r0r0r0r0r0r0r0r0r0r0r0r0r0r0r0r0r0r0r0r0r0r0r0r0r0r0r0r0r0r0r0r0r0r0r0r0r0r0r0r0r0r0r0r0r0r0r0r0r0r0r0r0r0r0r0r0r0r0r0r0r0r0r0r0r0r0r0r0r0r0r0r0r0r0r0r0r0r0r0r0r0r0rrrrrrrrrrrrrrr"+
-
-                        "0000 0000 rrrr r.r.r.r.rr " +
-                                "rrrr rrrr.r. rrrr r.r.r.r.rr rrrr " +
-                                "rrrr.r. rrrr r.r.rrr.r. rrrr.r. 00.r.0r.r. " +
-                                "rrrr r.r.rrr.r. rrrr r000 000r.r. rrrr" +
-                                "r.r.r.r.rr rrrr rrrr.r. rrrr" +
-                                "r.r.r.r.rr rrrr r.rrr.r.r. rrrr r.r.rrr.r." +
-                                "rrrr.r. 00.r.0r.r. rrrr r.r.rrr.r. rrrr" +
-                                "r000 000r.r. rrrr r.r.rrr.r. rrrr.r." +
-                                "0r.r.0r.r. rrrr r.r.rrr.r. rrrr r000"*/
             }
             catch (Exception exception) {
             }
         }
         if (!customScriptPath.isEmpty()){
             try{
+                var file = Files.readAllLines(Paths.get(customScriptPath));
+                var script =String.join(" ", file);
+                song.setCustomScript(script);
 
             }
             catch (Exception exception){
